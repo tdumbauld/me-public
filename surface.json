@@ -1,0 +1,27 @@
+{
+  "asof": null,
+  "regime": "--",
+  "note": "",
+  "metrics": [
+    {
+      "label": "VIX",
+      "value": "--",
+      "delta": ""
+    },
+    {
+      "label": "VIX1D",
+      "value": "--",
+      "delta": ""
+    },
+    {
+      "label": "VVIX",
+      "value": "--",
+      "delta": ""
+    },
+    {
+      "label": "Term",
+      "value": "--",
+      "delta": ""
+    }
+  ]
+}
