@@ -1,27 +1,27 @@
 {
-  "asof": null,
-  "regime": "--",
+  "asof": "2026-07-24T16:15:00-04:00",
+  "regime": "Normal",
   "note": "",
   "metrics": [
     {
       "label": "VIX",
-      "value": "--",
-      "delta": ""
+      "value": "18.6",
+      "delta": "-0.1"
     },
     {
       "label": "VIX1D",
-      "value": "--",
-      "delta": ""
+      "value": "15.4",
+      "delta": "+0.7"
     },
     {
       "label": "VVIX",
-      "value": "--",
-      "delta": ""
+      "value": "101",
+      "delta": "-1"
     },
     {
       "label": "Term",
-      "value": "--",
-      "delta": ""
+      "value": "1.10",
+      "delta": "contango"
     }
   ]
 }
