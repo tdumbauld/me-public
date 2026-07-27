@@ -4,14 +4,19 @@
   "note": "",
   "metrics": [
     {
+      "label": "VIX1D",
+      "value": "15.4",
+      "delta": "+0.7"
+    },
+    {
       "label": "VIX",
       "value": "18.6",
       "delta": "-0.1"
     },
     {
-      "label": "VIX1D",
-      "value": "15.4",
-      "delta": "+0.7"
+      "label": "90dVIX",
+      "value": "20.5",
+      "delta": "-0.1"
     },
     {
       "label": "VVIX",
