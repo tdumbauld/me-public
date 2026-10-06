@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Free calculator: separate the earnings jump from ordinary drift, and see what a straddle is really worth at the exit rather than at expiration.">
+<meta property="og:title" content="Vol Crush Calculator">
+<meta property="og:description" content="Free calculator: separate the earnings jump from ordinary drift, and see what a straddle is really worth at the exit rather than at expiration.">
+<!-- The Artifact viewer supplies a reset; a real document does not, so the
+     two rules the page relied on are restored here and nowhere else. -->
+<style>html,body{margin:0;padding:0}img{max-width:100%}</style>
+<title>Vol Crush Calculator</title>
+<!-- The ME monogram, inlined as a data URI. A separate file would be a
+     second request and a second thing to lose when this page is copied
+     onto the site; the whole point of the build is that it is ONE file.
+     Taken from brand/marks-public/ at #22D36B, which is what the live
+     beehiiv theme serves - NOT the brand kit's #C9FF3D. -->
+<link rel="icon" type="image/png" href="data:image/png;base64,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YaG8/tqJFe/wO+uDPrvvuXcmb+phBOiLJ4DGDgw56MNGEoDGDgz1cmaBOhgB1mB+fr4cf/kvZefOz5RZHfS574tfnumTiBGgL54AGjkw5KAPYxCARg4MOejDGASggXcY8o4+jEUAKn8RjoM+jEkAKj8w5KAPY/JVANbEVwH64gkAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBg87O+AGjp+xXU7rYtt6/p53sCgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAILNLWzeujTriwBmwxMABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACACXXfwHVtey3As4dIAAAAABJRU5ErkJggg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+/* ============================================================================
+   PRICE THE EVENT - the free earnings calculator, built as an instrument.
+
+   LAID OUT LIKE THE TERMINAL, which is a structure and not a skin:
+
+     1. a slim control strip across the top, the way the Terminal carries
+        ticker, expiries, side and anchor;
+     2. three columns, with the PAYOFF column double width - readouts on the
+        left, the thing you are actually looking at on the right;
+     3. under the chart, a dense one-line strip of `·` separated facts;
+     4. a TRANSPOSED scenario matrix - metrics as ROWS, spot outcomes as
+        COLUMNS. That is the single biggest compaction available: the same
+        numbers that take seven rows and a header in an ordinary table fit in
+        five rows with no header at all, and they read across the way a trader
+        scans a strip of outcomes.
+
+   ONE STRUCTURE: an ATM straddle, long or short. Both inputs ARE straddle
+   prices and an ATM straddle at zero rates inverts for its own standard
+   deviation exactly, so the tool and its arithmetic are one object.
+
+   THE TERMINAL KIT, NOT THE PUBLIC ONE. brand/README.md warns against styling
+   published work this way because it once produced a research article that
+   looked nothing like the site. That warning is about EDITORIAL work; here the
+   terminal look IS the content. Tokens are a COPY, not an import, because the
+   page must run with no server and no build step.
+
+   WHAT IS ON SCREEN: numbers, the payoff, and anything computed from the
+   visitor's own inputs. Every standing explanation sits behind a focusable `?`,
+   the .help / .tip component from the two grids. A title= attribute was
+   rejected for the reason recorded against the Vol Rush Grid.
+
+   THE SCREEN IS NOT IN HERE. The decomposition is published method (Dubinsky,
+   Johannes, Kaeck & Seeger 2019) and the exit repricing is arithmetic. The
+   richness measure, its lookback, its denominator and all earnings history stay
+   out.
+   ========================================================================== */
+:root{
+  --me-green:#22D36B; --me-green-dark:#16A34A; --me-blue:#60A5FA;
+  --bg:#0B0B0B; --panel:#1F1F1F; --panel-2:#141414;
+  --gold-rgb:255,255,255; --rule:rgba(var(--gold-rgb),.14);
+  --ink:#FFFFFF; --gold-br:#FFFFFF; --gold:#9CA3AF; --ink-dim:#858C99;
+  --buy:var(--me-green); --sell:#EF4444; --attn:var(--me-blue);
+  /* Chart roles named by JOB, never by hue, as brand.css has them. THE CURVES
+     READ BY LIGHTNESS: white is the mark this trade is actually closed at,
+     mid-gray the expiration bound, dim gray dashed the naive reference. Not one
+     signal colour among them, so no curve reads as a verdict. */
+  --chart-expiry:#9CA3AF; --chart-decay:#858C99; --chart-point:#4B5563;
+  --note:#C99A42;
+  --mono:'JetBrains Mono','SF Mono',Menlo,ui-monospace,monospace;
+  --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body);
+     font-size:13px; line-height:1.4; -webkit-font-smoothing:antialiased}
+.wrap{max-width:1420px; margin:0 auto; padding:14px 14px 32px}
+
+.top{display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+     padding-bottom:10px; border-bottom:1px solid var(--rule); margin-bottom:10px}
+.wm{font-weight:700; font-size:12px; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--ink); display:flex; align-items:center; gap:7px}
+/* THE BAR-E IS THE E OF EXECUTION, not a separator standing between two words.
+   The pages build the mark as MORNING <bar>XECUTION - the E is artwork and the
+   word that follows it is XECUTION, with no E of its own. Setting it as its own
+   element between "Morning" and "Execution" renders MORNING = EXECUTION, which
+   has an E too many and is a different mark. */
+.ex{display:inline-flex; align-items:center; gap:2px}
+.bare{display:inline-grid; gap:2px}
+.bare i{display:block; width:9px; height:2px; background:var(--me-green)}
+.tag{font-family:var(--mono); font-size:9.5px; letter-spacing:.2em;
+     text-transform:uppercase; color:var(--ink-dim); white-space:nowrap}
+.status{margin-left:auto; font-family:var(--mono); font-size:10.5px; color:var(--ink-dim)}
+
+.cta{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;
+     border:1px solid var(--me-green); border-radius:8px; padding:11px 14px;
+     background:linear-gradient(180deg,var(--panel),var(--panel-2))}
+.cta .txt{flex:1 1 360px; min-width:0; font-size:12.5px; color:var(--gold)}
+.cta .txt b{color:var(--ink); font-weight:600}
+.cta a{display:inline-block; background:var(--me-green); color:#0B0B0B; font-weight:700;
+       font-size:13px; padding:9px 20px; border-radius:10px; text-decoration:none;
+       white-space:nowrap}
+.cta a:hover{background:var(--me-green-dark)}
+
+/* The one piece of display type on the page. A visitor arriving cold needs to
+   know what this is before they meet a control strip, and "Vol Crush Calculator"
+   is what they would have searched for; "Price the Event" is the brand line and
+   now sits in the masthead where a brand line belongs. */
+.hero{margin:14px 0 12px}
+.hero h1{font-size:clamp(28px,4.4vw,40px); line-height:1.02; margin:0 0 7px;
+         font-weight:700; letter-spacing:-.025em; color:var(--ink)}
+.hero p{margin:0; max-width:62ch; font-size:13.5px; line-height:1.5; color:var(--gold)}
+
+.panel{background:linear-gradient(180deg,var(--panel),var(--panel-2));
+       border:1px solid var(--rule); border-radius:8px; padding:12px 13px; min-width:0}
+.ph{display:flex; align-items:center; gap:8px; margin:0 0 9px; flex-wrap:wrap}
+.ph h2{font-family:var(--mono); font-size:10.5px; letter-spacing:.2em;
+       text-transform:uppercase; color:var(--gold); margin:0; font-weight:600}
+.ph .rt{margin-left:auto; font-family:var(--mono); font-size:9.5px; color:var(--ink-dim);
+        letter-spacing:.06em}
+
+/* ---- control strip ---- */
+.ctl{display:flex; flex-wrap:wrap; gap:8px}
+.f{flex:1 1 92px; min-width:84px}
+.f label{display:block; font-family:var(--mono); font-size:8.5px; letter-spacing:.13em;
+         text-transform:uppercase; color:var(--gold); margin-bottom:3px; white-space:nowrap}
+.f input,.f select{width:100%; background:#141414; border:1px solid var(--rule);
+  border-radius:10px; color:var(--ink); font-family:var(--mono); font-size:13px;
+  padding:5px 8px; font-variant-numeric:tabular-nums}
+.f input:focus,.f select:focus{outline:none; border-color:var(--me-green)}
+
+/* ---- three columns, payoff double width ---- */
+.grid{display:grid; grid-template-columns:.88fr .88fr 2.24fr; gap:9px; margin:9px 0}
+@media (max-width:1100px){ .grid{grid-template-columns:1fr 1fr} .grid .wide{grid-column:1/-1} }
+@media (max-width:720px){ .grid{grid-template-columns:1fr} }
+
+.r{display:flex; justify-content:space-between; align-items:baseline; gap:8px;
+   padding:4px 0; border-bottom:1px solid var(--rule)}
+.r:last-child{border-bottom:none}
+.r .k{font-size:11px; color:var(--gold); min-width:0}
+.r .v{font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums;
+      color:var(--gold-br); white-space:nowrap; font-weight:500}
+.r .v.hero{font-size:18px}
+.r .v.g{color:var(--buy)} .r .v.l{color:var(--sell)} .r .v.d{color:var(--ink-dim)}
+
+.help{display:inline-flex; align-items:center; justify-content:center;
+      width:13px; height:13px; border:1px solid var(--rule); border-radius:50%;
+      font-family:var(--mono); font-size:8.5px; color:var(--gold); cursor:help;
+      position:relative; vertical-align:middle; flex:none}
+.help:focus{outline:none; border-color:var(--me-green); color:var(--me-green)}
+.help .tip{display:none; position:absolute; bottom:150%; left:0;
+  width:280px; background:#0B0B0B; border:1px solid var(--rule); border-radius:6px;
+  padding:10px 12px; font-family:var(--body); font-size:11px; line-height:1.55;
+  color:var(--ink); text-transform:none; letter-spacing:normal; z-index:40;
+  text-align:left; box-shadow:0 6px 20px rgba(0,0,0,.6); font-weight:400}
+.help .tip b{color:var(--me-green); font-weight:600}
+.help:hover .tip,.help:focus .tip{display:block}
+@media (max-width:620px){ .help .tip{width:216px; left:auto; right:0} }
+
+.srcnote{font-family:var(--mono); font-size:10px; line-height:1.6; color:var(--ink-dim);
+          border-top:1px solid var(--rule); margin-top:9px; padding-top:8px}
+.srcnote b{color:var(--gold-br); font-weight:500}
+.srcnote:empty{display:none}
+.note{font-family:var(--mono); font-size:10px; line-height:1.55; color:var(--note);
+      border-top:1px solid var(--rule); margin-top:8px; padding-top:7px}
+.note.bad{color:var(--sell)}
+.note b{color:var(--gold-br); font-weight:500}
+
+/* ---- payoff ---- */
+/* THE LEGEND SHOWS THE STROKE, NOT A DOT. Two of the three curves were dots in
+   near-identical greys, which is unreadable and was reported as such. Each
+   swatch now reproduces its curve's actual colour, weight and dash, so the key
+   cannot drift from the thing it describes. */
+.legend{display:flex; gap:15px; flex-wrap:wrap; margin:0 0 7px;
+        font-family:var(--mono); font-size:10.5px; color:var(--ink-dim)}
+.legend span{display:inline-flex; align-items:center}
+.legend i.sw{display:inline-block; width:20px; height:0; margin-right:6px;
+             border-top-width:2px; border-top-style:solid}
+.legend i.band{display:inline-block; width:15px; height:11px; margin-right:6px;
+               background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.14)}
+.pay svg{width:100%; height:auto; display:block}
+
+/* ---- the hover readout, which is how the terminal's own payoff behaves ---- */
+.chartwrap{position:relative}
+.hov{position:absolute; top:6px; pointer-events:none; display:none; z-index:5;
+     background:rgba(11,11,11,.96); border:1px solid var(--rule); border-radius:6px;
+     padding:7px 9px; font-family:var(--mono); font-size:10.5px; line-height:1.6;
+     white-space:nowrap; box-shadow:0 6px 18px rgba(0,0,0,.6)}
+.hov .hr{display:flex; justify-content:space-between; gap:16px}
+/* A tile per row, matching the curve it reads. The popup names three curves
+   that are told apart on the chart by colour, so repeating the colour here is
+   what connects the two; without it the reader has to count rows against the
+   legend. "Return" is NOT a curve and gets a transparent tile rather than an
+   invented colour, which keeps the labels aligned without claiming a line. */
+.hov .hk{color:var(--gold)}
+.hov .hsw{display:inline-block; width:9px; height:9px; border-radius:2px;
+          margin-right:7px; vertical-align:middle}
+.hov .hsw.none{background:transparent}
+.hov .hv{font-variant-numeric:tabular-nums; color:var(--ink)}
+.hov .hv.g{color:var(--buy)} .hov .hv.l{color:var(--sell)}
+.hov .top{color:var(--ink); border-bottom:1px solid var(--rule);
+          margin-bottom:4px; padding-bottom:4px}
+
+/* THE DENSE STRIP: one line of `·` separated facts, exactly the register the
+   terminal uses under its own chart. */
+.strip{font-family:var(--mono); font-size:10px; line-height:1.7; color:var(--ink-dim);
+       border-top:1px solid var(--rule); margin-top:8px; padding-top:7px}
+.strip b{color:var(--gold-br); font-weight:500}
+.strip .sep{color:var(--chart-point); margin:0 5px}
+
+/* THE MATRIX: metrics as rows, outcomes as columns. */
+.mx{width:100%; border-collapse:collapse; font-family:var(--mono); font-size:11.5px;
+    font-variant-numeric:tabular-nums; margin-top:7px}
+.mx td{padding:3px 5px; text-align:right; white-space:nowrap; color:var(--ink)}
+.mx td.h{text-align:left; color:var(--gold); font-size:8.5px; letter-spacing:.11em;
+         text-transform:uppercase; border-right:1px solid var(--rule);
+         padding-right:9px; width:1%; white-space:nowrap}
+/* Transparent by default, so a row with no curve still indents to the same x. */
+.mx td.h i{display:inline-block; width:9px; height:9px; border-radius:2px;
+           margin-right:7px; vertical-align:middle; background:transparent}
+.mx tr+tr td{border-top:1px solid rgba(var(--gold-rgb),.06)}
+.mx td.at{background:rgba(var(--gold-rgb),.05)}
+.mx td.g{color:var(--buy)} .mx td.l{color:var(--sell)} .mx td.d{color:var(--ink-dim)}
+.mxw{overflow-x:auto}
+
+footer{margin-top:10px; font-family:var(--mono); font-size:9.5px; line-height:1.6;
+       color:var(--ink-dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <span class="wm" aria-label="Morning Execution">
+      <span aria-hidden="true">Morning</span>
+      <span class="ex" aria-hidden="true"><span class="bare"><i></i><i></i><i></i></span>xecution</span>
+    </span>
+    <span class="tag">Price the event &bull; Trade the vol</span>
+    <span class="status" id="status"></span>
+  </div>
+
+  <div class="cta">
+    <div class="txt"><b>This is the arithmetic. The work is knowing where to point it.</b>
+      Every weekday morning Morning Execution ranks the earnings slate by how richly each
+      event is priced against that company's own history, then works up the few worth
+      attention - including the ones rejected, and why.</div>
+    <a href="https://www.morningexecution.com/" rel="noopener">Subscribe free</a>
+  </div>
+
+  <div class="hero">
+    <h1>Vol Crush Calculator</h1>
+    <p>What the options are charging for an earnings print, how much of that is the jump
+       itself, and what a straddle is really worth on the morning you close it.</p>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><h2>Inputs</h2><span class="help" tabindex="0">?<span class="tip">
+      <b>Two expiries, because one cannot do it.</b> An option price near earnings holds
+      two things: the scheduled jump, and the ordinary drift of the stock over the days
+      around it. A single straddle gives you their total and no way to split it.<br><br>
+      The front expiry contains the event. The back contains the same drift over a longer
+      life and <b>the same jump</b>, because a jump fixed to a date does not grow with
+      time. Two equations, two unknowns.<br><br>
+      <b>Keep the back expiry inside the quarter.</b> Past the next earnings date it holds
+      two jumps and this prices them as one.<br><br>
+      <b>The strike is taken as spot</b> and the front straddle is treated as your fill.
+      A straddle struck away from spot does not invert correctly, and a worked fill is
+      worse than the mid you typed.
+    </span></span>
+      <span class="rt" id="inputnote"></span></div>
+    <div class="ctl">
+      <div class="f"><label>Example</label><select id="example"></select></div>
+      <div class="f"><label>Spot</label><input id="spot" type="number" step="any" value="100"></div>
+      <div class="f"><label>Front stdl</label><input id="sf" type="number" step="any" value="6.00"></div>
+      <div class="f"><label>Front DTE</label><input id="df" type="number" step="1" value="7"></div>
+      <div class="f"><label>Back stdl</label><input id="sb" type="number" step="any" value="7.50"></div>
+      <div class="f"><label>Back DTE</label><input id="db" type="number" step="1" value="35"></div>
+      <div class="f"><label>Side</label><select id="side">
+        <option value="short">Short straddle</option>
+        <option value="long">Long straddle</option></select></div>
+      <div class="f"><label>Contracts</label><input id="qty" type="number" step="1" value="1"></div>
+      <div class="f"><label>Days held</label><input id="held" type="number" step="1" value="1"></div>
+      <div class="f"><label>Exit vol %</label><input id="xv" type="number" step="any" placeholder="auto"></div>
+    </div>
+    <div class="srcnote" id="srcnote"></div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="ph"><h2>Event</h2><span class="help" tabindex="0">?<span class="tip">
+        <b>The implied move is not the event.</b> It is the jump and the drift combined,
+        and they combine by variance rather than addition, so they do not sum to it.<br><br>
+        <b>Crush is not profit.</b> It accrues to whoever is short premium whatever the
+        stock does, so it is a mechanic rather than a strategy, and it is already inside
+        the price you paid or received.<br><br>
+        <b>The event figure is sturdy and the crush is fragile</b>, which reads backwards.
+        A small error in the back straddle moves post-event vol a long way and the event
+        estimate barely at all, because the event term absorbs the residual. The
+        sensitivity line below is computed from your own inputs for that reason.<br><br>
+        <b>Known bias: the crush here runs 10% to 30% too big.</b> The drift rate is
+        measured between your two expiries, then used as the level the front one collapses
+        to. The front's remaining life is the stretch right after the print, which runs
+        hotter: across 1,854 events the five sessions after an announcement ran about
+        1.10x the twenty after. The closer the back expiry, the worse it bites.
+      </span></span></div>
+      <div id="p1"></div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><h2>Straddle</h2><span class="help" tabindex="0">?<span class="tip">
+        <b>The break even is the whole premium, not the event.</b> A straddle pays only
+        once the move clears everything you paid, and what you paid covers the jump AND
+        the drift around it.<br><br>
+        <b>An ATM straddle always breaks even near 0.80 standard deviations.</b> That
+        falls out of the arithmetic rather than the market: a straddle costs about
+        sqrt(2/pi) = 0.798 of one standard deviation whatever the name. So the chance of
+        clearing it sits near 42% every time, and a long straddle held to expiration is
+        roughly a 42% proposition before costs.<br><br>
+        <b>A short straddle has no defined maximum loss</b> and this reports none rather
+        than a large number, because a figure there invites sizing it like a defined-risk
+        trade. The broker's margin is not a maximum loss.<br><br>
+        <b>No spread and no commission.</b> You typed a mid and this believes you. A
+        census across ten names found two-leg structures quoted at a median of 12% of
+        premium.
+      </span></span></div>
+      <div id="p2"></div>
+    </div>
+
+    <div class="panel wide pay">
+      <div class="ph"><h2>Payoff diagram</h2><span class="help" tabindex="0">?<span class="tip">
+        <b>Three curves, and the gaps between them are the content.</b> Grey is the
+        position at expiration, which is what every platform draws. White is the same
+        position at your exit, with the crush applied and the remaining days still in it:
+        white because it is the mark this trade is actually closed at. The dashed line is
+        the same exit <b>with no crush at all</b>.<br><br>
+        <b>The dashed line is the mistake made visible.</b> It is what your platform's
+        theta tells you, holding implied vol flat. The distance between it and the white
+        curve is the crush, and on an earnings position it is not a rounding error.<br><br>
+        <b>They read by lightness, not hue</b>, so no curve reads as a verdict and all
+        three survive a colour-blind reader or a greyscale print. That convention comes
+        from the terminal these are drawn like.<br><br>
+        <b>The shaded band is the event move</b> backed out of your two quotes: what the
+        market has priced the announcement at. Not a forecast and not a confidence
+        interval.<br><br>
+        <b>The curves must converge in the tails.</b> Far from the strike no extrinsic
+        remains, so all three meet. That is a structural check on the arithmetic, not a
+        drawing choice.<br><br>
+        <b>The table below puts a number on the gap.</b> <i>Exit no crush</i> is the dashed
+        line and <i>From crush</i> is the distance to the solid white one, which is the
+        only figure here that isolates what the crush is worth in dollars. It is signed
+        so that positive always means the crush worked for you: it pays a short and costs
+        a long, and the sign flips with the side by itself.
+      </span></span>
+        <span class="rt" id="paynote"></span></div>
+      <div class="legend">
+        <span><i class="sw" style="border-color:var(--chart-expiry)"></i>Expiry</span>
+        <span><i class="sw" style="border-color:var(--gold-br);border-top-width:3px"></i>Exit with crush</span>
+        <span><i class="sw" style="border-color:var(--attn);border-top-style:dashed"></i>Exit no crush</span>
+        <span><i class="band"></i>Event move priced</span>
+      </div>
+      <div class="chartwrap">
+        <div id="chart"></div>
+        <div class="hov" id="hov"></div>
+      </div>
+      <div class="strip" id="pstrip"></div>
+      <div class="mxw"><table class="mx" id="mx"></table></div>
+    </div>
+  </div>
+
+  <footer>
+    Not investment advice, not a recommendation, not an offer of advisory services. Options
+    carry substantial risk and a short straddle carries unlimited risk. Every figure follows
+    from the prices you type and the assumptions behind each
+    <span style="color:var(--gold)">?</span>; verify anything you intend to trade against
+    your own broker's quotes. &middot; morningexecution.com
+  </footer>
+</div>
+
+<script>
+/* ===========================================================================
+   EXAMPLES - dated snapshots, not a live feed, and the distinction is the whole
+   reason they exist. Piping a chain into a public page would redistribute
+   licensed options data to anonymous visitors, which no free source permits:
+   US option quotes all originate from OPRA and reach the public only through
+   agreements that cover display. These are a handful of figures the desk
+   captured once from its own terminal, which is a different object.
+
+   It is also the better page. A live quote on a random afternoon carries no
+   story; a dated one can be checked against what the stock then did. And
+   nothing here can break at three in the morning.
+
+   GENERATED. Written between the markers by inject_tool_snapshot.py from
+   collect_tool_snapshot.py's output. Do not hand-edit.
+   ========================================================================= */
+/* SNAPSHOT-START */
+const SNAPSHOT = {"names":{"AAPL":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":9.93,"strike":332.5},"front":{"dte":3,"expiry":"2026-10-09","straddle":5.88,"strike":332.5},"report_date":"2026-10-29","session":"AMC","spans_earnings":false,"spot":333.21},"AMZN":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":9.48,"strike":255.0},"front":{"dte":3,"expiry":"2026-10-09","straddle":5.67,"strike":255.0},"report_date":"2026-10-29","session":"AMC","spans_earnings":false,"spot":256.12},"AVGO":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":18.7,"strike":380.0},"front":{"dte":3,"expiry":"2026-10-09","straddle":11.38,"strike":380.0},"report_date":"2026-12-09","session":"AMC","spans_earnings":false,"spot":378.81},"CSCO":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":4.59,"strike":118.0},"front":{"dte":3,"expiry":"2026-10-09","straddle":2.73,"strike":118.0},"report_date":"2026-11-12","session":"AMC","spans_earnings":false,"spot":117.55},"GOOG":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":13.15,"strike":345.0},"front":{"dte":3,"expiry":"2026-10-09","straddle":7.53,"strike":345.0},"report_date":"2026-10-28","session":"AMC","spans_earnings":false,"spot":345.07},"META":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":33.42,"strike":742.5},"front":{"dte":3,"expiry":"2026-10-09","straddle":19.28,"strike":742.5},"report_date":"2026-10-28","session":"AMC","spans_earnings":false,"spot":743.37},"MSFT":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":17.05,"strike":530.0},"front":{"dte":3,"expiry":"2026-10-09","straddle":10.3,"strike":530.0},"report_date":"2026-10-28","session":"AMC","spans_earnings":false,"spot":531.07},"MU":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":59.98,"strike":1055.0},"front":{"dte":3,"expiry":"2026-10-09","straddle":34.47,"strike":1055.0},"report_date":"2026-12-23","session":"AMC","spans_earnings":false,"spot":1055.21},"NVDA":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":8.8,"strike":240.0},"front":{"dte":3,"expiry":"2026-10-09","straddle":5.0,"strike":240.0},"report_date":"2026-11-17","session":"AMC","spans_earnings":false,"spot":240.39},"PLTR":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":10.7,"strike":192.5},"front":{"dte":3,"expiry":"2026-10-09","straddle":6.3,"strike":192.5},"report_date":"2026-11-02","session":"AMC","spans_earnings":false,"spot":192.45},"TSLA":{"as_of":"2026-10-06","back":{"dte":10,"expiry":"2026-10-16","straddle":18.9,"strike":380.0},"front":{"dte":3,"expiry":"2026-10-09","straddle":10.4,"strike":380.0},"report_date":"2026-10-21","session":"AMC","spans_earnings":false,"spot":380.23}},"updated":"2026-10-06T19:02:27"};
+/* SNAPSHOT-END */
+
+/* ===========================================================================
+   The arithmetic. Nothing is fetched and nothing is sent; the page works
+   offline once loaded. Verified against an independent implementation:
+   event^2 + drift^2 == implied^2 to 12 decimal places, the inverted standard
+   deviation reprices a $6.00 straddle to $6.000024, and the break even lands
+   at 0.7977 standard deviations against the theoretical sqrt(2/pi) = 0.7979.
+   ========================================================================= */
+
+/* Abramowitz and Stegun 7.1.26, |error| < 1.5e-7. */
+function erf(x){
+  const s = x < 0 ? -1 : 1; x = Math.abs(x);
+  const t = 1/(1 + 0.3275911*x);
+  const y = 1 - ((((1.061405429*t - 1.453152027)*t + 1.421413741)*t
+                 - 0.284496736)*t + 0.254829592)*t*Math.exp(-x*x);
+  return s*y;
+}
+function N(x){ return 0.5*(1 + erf(x/Math.SQRT2)); }
+
+/* Acklam's inverse normal CDF. The one step that cannot be done forwards. */
+function Ninv(p){
+  if(p <= 0 || p >= 1) return NaN;
+  const a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,
+           1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+        b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,
+           6.680131188771972e+01,-1.328068155288572e+01],
+        c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,
+           -2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+        d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,
+           3.754408661907416e+00];
+  const pl = 0.02425; let q, r;
+  if(p < pl){ q = Math.sqrt(-2*Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
+           ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if(p > 1-pl){ q = Math.sqrt(-2*Math.log(1-p));
+    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
+            ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q = p - 0.5; r = q*q;
+  return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q /
+         (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+}
+
+/* An ATM straddle at zero rates prices as 2S(2N(s/2) - 1), where s is the TOTAL
+   standard deviation over its life. It inverts for s directly, with no clock in
+   the step: the clock enters once, afterwards, when s^2 is spread over time. */
+function sdFromStraddle(price, spot){
+  if(!(price > 0) || !(spot > 0)) return null;
+  const q = 0.5 + price/(4*spot);
+  return q >= 1 ? null : 2*Ninv(q);
+}
+function bs(isCall, S, K, T, v){
+  if(!(S > 0) || !(K > 0)) return 0;
+  const s = v*Math.sqrt(Math.max(T,0));
+  if(!(s > 1e-9)) return Math.max(0, isCall ? S-K : K-S);
+  const d1 = (Math.log(S/K) + 0.5*s*s)/s, d2 = d1 - s;
+  return isCall ? S*N(d1) - K*N(d2) : K*N(-d2) - S*N(-d1);
+}
+const straddleAt = (S,K,T,v) => bs(true,S,K,T,v) + bs(false,S,K,T,v);
+
+function decompose(spot, pf, df, pb, dbk){
+  const sf = sdFromStraddle(pf,spot), sb = sdFromStraddle(pb,spot);
+  if(sf === null || sb === null) return {err:"A straddle price looks wrong against that spot."};
+  const tf = df/365, tb = dbk/365;
+  if(!(tb > tf)) return {err:"The back expiry has to be later than the front."};
+  const v = (sb*sb - sf*sf)/(tb - tf);
+  if(!(v > 0)) return {err:"These quotes imply negative drift between the expiries. Check them."};
+  const ev2 = sf*sf - v*tf, base = Math.sqrt(v);
+  return {sf:sf, tf:tf, frontIV:sf/Math.sqrt(tf), base:base,
+          crush:sf/Math.sqrt(tf) - base, drift:Math.sqrt(v*tf),
+          event: ev2 > 0 ? Math.sqrt(ev2) : null};
+}
+
+/* ================================================================ helpers */
+const $ = id => document.getElementById(id);
+const num = id => parseFloat($(id).value);
+const pct = (x,dp) => (x*100).toFixed(dp === undefined ? 1 : dp) + "%";
+const usd = x => (x < 0 ? "-$" : "$") + Math.abs(x).toFixed(2);
+const usd0 = x => (x < 0 ? "-$" : "$") + Math.abs(x).toFixed(0);
+const pts = x => (x >= 0 ? "+" : "") + (x*100).toFixed(1);
+const row = (k,v,cls) => '<div class="r"><div class="k">' + k
+      + '</div><div class="v ' + (cls||"") + '">' + v + '</div></div>';
+
+/* P&L per share. One kink at the strike, no wings anywhere. */
+const pExp  = (long,K,prem,S) => (long?1:-1)*(Math.abs(S-K) - prem);
+const pExit = (long,K,prem,S,T,v) => (long?1:-1)*(straddleAt(S,K,T,v) - prem);
+
+/* Round, readable axis ticks. A payoff axis labelled 183.4 / 61.1 / -61.1 reads
+   as noise; the terminal's reads $300 / $200 / $100 / $0. */
+function ticks(lo, hi, want){
+  const span = hi - lo;
+  if(!(span > 0)) return [lo];
+  const raw = span/want, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  let step = mag;
+  for(const m of [1,2,2.5,5,10]) if(mag*m >= raw){ step = mag*m; break; }
+  const out = [];
+  for(let v = Math.ceil(lo/step)*step; v <= hi + 1e-9; v += step)
+    out.push(Math.abs(v) < step/1e6 ? 0 : v);
+  return out;
+}
+
+/* ================================================================== payoff
+   Hand-drawn SVG rather than a charting library: no external script, no CSP
+   surface, and the page keeps working with no network once loaded. */
+/* Published by the draw so the hover handler can map a cursor back onto a spot
+   price. It is set rather than recomputed because the two must agree exactly: a
+   crosshair that lands a pixel off the curve it claims to read is worse than no
+   crosshair. */
+let CHART = null;
+
+function drawPayoff(long, K, prem, T1, xv, frontIV, event, qty){
+  const W = 760, H = 330, ml = 58, mr = 12, mt = 14, mb = 32;
+  const pw = W-ml-mr, ph = H-mt-mb;
+  const be = prem/K;
+  const span = Math.max(2.4*(event||0), 2.0*be, 0.10);
+  const lo = K*(1-span), hi = K*(1+span);
+  const xs = []; for(let i = 0; i <= 140; i++) xs.push(lo + (hi-lo)*i/140);
+
+  const ye = xs.map(S => pExp(long,K,prem,S)*100*qty);
+  const yx = xs.map(S => pExit(long,K,prem,S,T1,xv)*100*qty);
+  const yn = xs.map(S => pExit(long,K,prem,S,T1,frontIV)*100*qty);   // no crush
+  let ymin = Math.min(...ye,...yx,...yn), ymax = Math.max(...ye,...yx,...yn);
+  const pad = (ymax-ymin)*0.10 || 1; ymin -= pad; ymax += pad;
+
+  const X = S => ml + (S-lo)/(hi-lo)*pw;
+  const Y = v => mt + (ymax-v)/(ymax-ymin)*ph;
+  const path = ys => xs.map((S,i) => (i?"L":"M") + X(S).toFixed(1) + " " + Y(ys[i]).toFixed(1)).join(" ");
+
+  let g = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Straddle payoff: '
+        + 'expiration, post-crush exit, and exit with no crush">';
+
+  if(event){
+    const a = X(K*(1-event)), b = X(K*(1+event));
+    g += '<rect x="'+a.toFixed(1)+'" y="'+mt+'" width="'+(b-a).toFixed(1)
+       + '" height="'+ph+'" fill="rgba(255,255,255,.035)"/>';
+  }
+  /* horizontal gridlines at every labelled value, the way the terminal does */
+  for(const v of ticks(ymin, ymax, 5)){
+    const y = Y(v);
+    g += '<line x1="'+ml+'" y1="'+y.toFixed(1)+'" x2="'+(W-mr)+'" y2="'+y.toFixed(1)
+       + '" stroke="rgba(255,255,255,'+(v===0?'.30':'.09')+')" stroke-width="1"/>';
+    g += '<text x="'+(ml-6)+'" y="'+(y+3).toFixed(1)+'" fill="var(--ink-dim)" '
+       + 'font-family="var(--mono)" font-size="11" text-anchor="end">'+usd0(v/100)+'</text>';
+  }
+  /* strike, dashed */
+  g += '<line x1="'+X(K).toFixed(1)+'" y1="'+mt+'" x2="'+X(K).toFixed(1)+'" y2="'+(mt+ph)
+     + '" stroke="var(--chart-point)" stroke-width="1.25" stroke-dasharray="4 4"/>';
+  /* x ticks at round spot values */
+  for(const v of ticks(lo, hi, 6)){
+    if(v <= lo || v >= hi) continue;
+    g += '<text x="'+X(v).toFixed(1)+'" y="'+(mt+ph+20)+'" fill="var(--ink-dim)" '
+       + 'font-family="var(--mono)" font-size="11" text-anchor="middle">'+v.toFixed(2)+'</text>';
+  }
+  /* break evens, ticked where they bite */
+  for(const b of [K-prem, K+prem]) if(b > lo && b < hi)
+    g += '<line x1="'+X(b).toFixed(1)+'" y1="'+(mt+ph-8)+'" x2="'+X(b).toFixed(1)
+       + '" y2="'+(mt+ph)+'" stroke="var(--chart-expiry)" stroke-width="2"/>';
+
+  /* curves, dimmest first so the exit mark sits on top */
+  g += '<path d="'+path(yn)+'" fill="none" stroke="var(--attn)" stroke-width="2" '
+     + 'stroke-dasharray="5 4"/>';
+  g += '<path d="'+path(ye)+'" fill="none" stroke="var(--chart-expiry)" stroke-width="2"/>';
+  g += '<path d="'+path(yx)+'" fill="none" stroke="var(--gold-br)" stroke-width="3"/>';
+
+  /* The crosshair, drawn hidden and moved by the pointer handler rather than
+     redrawn on every mousemove: re-rendering the whole chart at pointer rate is
+     what makes a hover feel heavy. */
+  g += '<g id="cx" style="display:none">'
+     + '<line id="cxl" y1="'+mt+'" y2="'+(mt+ph)+'" stroke="rgba(255,255,255,.40)" stroke-width="1"/>'
+     + '<circle id="cxe" r="3.5" fill="var(--chart-expiry)"/>'
+     + '<circle id="cxn" r="3.5" fill="var(--attn)"/>'
+     + '<circle id="cxx" r="4.5" fill="var(--gold-br)"/>'
+     + '</g>';
+
+  CHART = {W:W, ml:ml, pw:pw, lo:lo, hi:hi,
+           X:X, Y:Y, long:long, K:K, prem:prem, T1:T1, xv:xv,
+           frontIV:frontIV, qty:qty, step:event};
+  return g + "</svg>";
+}
+
+/* ================================================================== hover
+   Bound ONCE to the wrapper, not to the svg, because the svg is replaced on
+   every input change and a listener on it would die with the first keystroke. */
+(function(){
+  const wrap = document.querySelector(".chartwrap"), hov = $("hov");
+  if(!wrap || !hov) return;
+
+  function hide(){
+    hov.style.display = "none";
+    const cx = wrap.querySelector("#cx"); if(cx) cx.style.display = "none";
+  }
+  wrap.addEventListener("pointerleave", hide);
+
+  wrap.addEventListener("pointermove", e => {
+    const svg = wrap.querySelector("svg");
+    if(!svg || !CHART){ hide(); return; }
+    const rect = svg.getBoundingClientRect();
+    if(!rect.width){ hide(); return; }
+    /* client x -> viewBox x -> spot, clamped to the plotted range so the
+       readout never claims a price the chart does not cover */
+    let vx = (e.clientX - rect.left)/rect.width*CHART.W;
+    vx = Math.max(CHART.ml, Math.min(CHART.ml + CHART.pw, vx));
+    const S = CHART.lo + (vx - CHART.ml)/CHART.pw*(CHART.hi - CHART.lo);
+
+    const pe = pExp(CHART.long, CHART.K, CHART.prem, S)*100*CHART.qty;
+    const px = pExit(CHART.long, CHART.K, CHART.prem, S, CHART.T1, CHART.xv)*100*CHART.qty;
+    const pn = pExit(CHART.long, CHART.K, CHART.prem, S, CHART.T1, CHART.frontIV)*100*CHART.qty;
+    const mv = S/CHART.K - 1;
+
+    const x = CHART.X(S);
+    const set = (id, cy) => { const el = wrap.querySelector(id);
+      if(el){ el.setAttribute("cx", x.toFixed(1)); el.setAttribute("cy", cy.toFixed(1)); } };
+    const cx = wrap.querySelector("#cx"), cl = wrap.querySelector("#cxl");
+    if(cx) cx.style.display = "";
+    if(cl){ cl.setAttribute("x1", x.toFixed(1)); cl.setAttribute("x2", x.toFixed(1)); }
+    set("#cxe", CHART.Y(pe)); set("#cxn", CHART.Y(pn)); set("#cxx", CHART.Y(px));
+
+    const r = (k,v,cls,sw) => '<div class="hr"><span class="hk"><i class="hsw'
+      + (sw ? '" style="background:'+sw+'"' : ' none"') + '></i>'+k
+      + '</span><span class="hv '+(cls||"")+'">'+v+'</span></div>';
+    const cls = v => v >= 0 ? "g" : "l";
+    hov.innerHTML =
+        '<div class="hr top"><span>' + S.toFixed(2) + '</span><span>'
+      + (mv >= 0 ? "+" : "") + (mv*100).toFixed(1) + '%</span></div>'
+      + r("Expiry", usd0(pe), cls(pe), "var(--chart-expiry)")
+      + r("Exit with crush", usd0(px), cls(px), "var(--gold-br)")
+      + r("Exit no crush", usd0(pn), cls(pn), "var(--attn)")
+      + r("From crush", usd0(px-pn), cls(px-pn))
+      + r("Return", pct(px/(CHART.prem*100*CHART.qty), 0), cls(px));
+    hov.style.display = "block";
+
+    /* flip the box across the cursor near the right edge, or it would sit
+       outside the panel on exactly the half of the chart people read last */
+    const pctX = vx/CHART.W*100;
+    if(pctX < 55){ hov.style.left = pctX+"%"; hov.style.right = "auto";
+                   hov.style.transform = "translateX(14px)"; }
+    else { hov.style.right = (100-pctX)+"%"; hov.style.left = "auto";
+           hov.style.transform = "translateX(-14px)"; }
+  });
+})();
+
+/* ================================================================= render */
+function go(){
+  const spot=num("spot"), side=$("side").value, qty=num("qty"), held=num("held");
+  const prem=num("sf"), long = side === "long", K = spot;
+  const d = decompose(spot, prem, num("df"), num("sb"), num("db"));
+
+  if(d.err){
+    $("p1").innerHTML = '<div class="note bad">'+d.err+'</div>';
+    $("p2").innerHTML = ""; $("chart").innerHTML = ""; $("pstrip").innerHTML = "";
+    $("mx").innerHTML = ""; $("status").textContent = ""; $("paynote").textContent = "";
+    return;
+  }
+
+  /* ---- event */
+  let h = row("Implied move", "&plusmn;"+pct(d.sf), "hero");
+  h += row("Event move", d.event === null ? "none priced" : "&plusmn;"+pct(d.event),
+           d.event === null ? "d" : "g");
+  h += row("Drift before it", "&plusmn;"+pct(d.drift));
+  h += row("Front IV", pct(d.frontIV));
+  h += row("Post-event vol", pct(d.base));
+  h += row("Crush", pts(-d.crush)+" pts", "g");
+  const lo = decompose(spot, prem, num("df"), num("sb")*0.99, num("db"));
+  const hi = decompose(spot, prem, num("df"), num("sb")*1.01, num("db"));
+  if(!lo.err && !hi.err){
+    const sp = Math.abs(hi.base-lo.base)*100;
+    h += '<div class="note">&plusmn;1% on the back straddle moves post-event vol <b>'
+      + pct(lo.base)+'</b> to <b>'+pct(hi.base)+'</b>, a spread of <b>'+sp.toFixed(1)
+      + '</b> pts, and the crush with it. '
+      + (sp > 2 ? 'Wide: the expiries sit close together, which amplifies quote error.'
+                : 'Tight enough to work with.')+'</div>';
+  }
+  if(d.event === null)
+    h += '<div class="note">The drift implied between these expiries accounts for the '
+       + 'whole front straddle, so this pair prices no jump. On a quiet name that can be '
+       + 'right; more often a quote is stale or the back expiry holds a second event.</div>';
+  $("p1").innerHTML = h;
+
+  /* ---- straddle */
+  const beMove = prem/spot, beSd = beMove/d.sf, pBeyond = 2*(1 - N(beSd));
+  let h2 = row("Break even move", "&plusmn;"+pct(beMove), "hero");
+  h2 += row("... in std deviations", beSd.toFixed(2));
+  h2 += row("Chance of clearing it", pct(pBeyond,0), pBeyond >= 0.5 ? "g" : "");
+  h2 += row("Premium "+(long?"paid":"collected"), usd(prem*100*qty), long?"l":"g");
+  h2 += row("Break evens", usd(spot-prem)+" / "+usd(spot+prem));
+  h2 += row("Max profit", long ? "unbounded" : usd(prem*100*qty), long?"d":"g");
+  h2 += row("Max loss", long ? usd(prem*100*qty) : "unbounded", long?"l":"d");
+  if(!long) h2 += '<div class="note">A short straddle has <b>no defined maximum loss</b>, '
+    + 'so none is reported. Margin is not one, and sizing this like a defined-risk trade '
+    + 'is the mistake the blank prevents.</div>';
+  if(d.event !== null && beMove > d.event)
+    h2 += '<div class="note">Break even <b>'+pct(beMove)+'</b> sits ABOVE the priced event '
+       + 'move <b>'+pct(d.event)+'</b>. The jump alone does not pay for this.</div>';
+  $("p2").innerHTML = h2;
+
+  /* ---- exit basis */
+  const T1 = (num("df")-held)/365;
+  const xvIn = parseFloat($("xv").value);
+  const xv = isFinite(xvIn) && xvIn > 0 ? xvIn/100 : d.base;
+  if(!(T1 > 0)){
+    $("chart").innerHTML = "";
+    $("pstrip").innerHTML = '<span style="color:var(--sell)">That holding period reaches '
+      + 'the front expiry. At expiration every basis is the same, which is the one case '
+      + 'this page has nothing to add to.</span>';
+    $("mx").innerHTML = ""; $("paynote").textContent = ""; return;
+  }
+
+  $("chart").innerHTML = drawPayoff(long, K, prem, T1, xv, d.frontIV, d.event, qty);
+  $("paynote").innerHTML = (long?"LONG":"SHORT")+" &middot; "+qty+" LOT"+(qty===1?"":"S")
+    + " &middot; K "+K.toFixed(2);
+
+  /* the dense strip, in the terminal's own register */
+  const flatX = pExit(long,K,prem,spot,T1,xv)*100*qty;
+  const flatN = pExit(long,K,prem,spot,T1,d.frontIV)*100*qty;
+  const S = '<span class="sep">&middot;</span>';
+  $("pstrip").innerHTML =
+      "EXIT AFTER " + held + "D at " + pct(xv) + S
+    + "break even &plusmn;" + pct(beMove) + " = <b>" + beSd.toFixed(2) + "</b> sd" + S
+    + "<b>" + pct(pBeyond,0) + "</b> chance of clearing" + S
+    + "event &plusmn;" + (d.event === null ? "n/a" : pct(d.event)) + S
+    + "crush <b>" + pts(-d.crush) + "</b> pts" + S
+    + "flat spot <b>" + usd0(flatX) + "</b> against " + usd0(flatN)
+    + " ignoring the crush";
+
+  /* ---- the transposed matrix */
+  const step = (d.event !== null && d.event > 0.002) ? d.event : d.sf;
+  const ms = [-1.5,-1,-0.5,0,0.5,1,1.5];
+  const cells = ms.map(m => {
+    const Sx = spot*(1+m*step);
+    return {m:m, S:Sx, pe:pExp(long,K,prem,Sx)*100*qty,
+            px:pExit(long,K,prem,Sx,T1,xv)*100*qty,
+            pn:pExit(long,K,prem,Sx,T1,d.frontIV)*100*qty};
+  });
+  /* A TILE ONLY WHERE THERE IS A CURVE. Spot, Move and Return are not lines,
+     and From crush is the DISTANCE BETWEEN two of them rather than a third - a
+     colour there would put a fourth key on a three-curve chart. They carry a
+     transparent tile of the same width instead, so every label still starts at
+     the same x and the column has one left edge rather than two. */
+  const line = (lab, fn, sw) => '<tr><td class="h"><i'
+    + (sw ? ' style="background:'+sw+'"' : '') + '></i>'+lab+'</td>'
+    + cells.map(c => '<td class="'+(c.m===0?"at ":"")+fn(c).cls+'">'+fn(c).t+'</td>').join("")
+    + '</tr>';
+  $("mx").innerHTML =
+      line("Spot",   c => ({t:c.S.toFixed(2), cls:"d"}))
+    + line("Move",   c => ({t:c.m===0?"flat":pts(c.m*step)+"%", cls:"d"}))
+    + line("Expiry", c => ({t:usd0(c.pe), cls:c.pe>=0?"g":"l"}), "var(--chart-expiry)")
+    + line("Exit with crush", c => ({t:usd0(c.px), cls:c.px>=0?"g":"l"}), "var(--gold-br)")
+    /* The same mark with implied vol held flat - the blue dashed curve. */
+    + line("Exit no crush", c => ({t:usd0(c.pn), cls:c.pn>=0?"g":"l"}), "var(--attn)")
+    /* AND THE DIFFERENCE, which is the only row on the page that isolates what
+       the crush is worth in dollars. Signed so positive always means the crush
+       WORKED FOR YOU: it pays a short and costs a long, and the sign flips with
+       the side on its own rather than needing a rule to remember. */
+    + line("From crush", c => ({t:usd0(c.px-c.pn), cls:(c.px-c.pn)>=0?"g":"l"}))
+    /* Both halves are already in dollars, so this is one division. Return on
+       PREMIUM, because a long straddle has no bounded max profit to measure
+       against and a short one has no bounded max loss; premium is the only
+       figure defined on both sides. */
+    + line("Return", c => ({t:pct(c.px/(prem*100*qty), 0), cls:c.px>=0?"g":"l"}));
+
+  $("status").innerHTML = (long?"LONG":"SHORT")+" STRADDLE &middot; "+qty+"x &middot; BE &plusmn;"
+    + pct(beMove)+" &middot; crush "+pts(-d.crush)+" pts";
+  $("inputnote").innerHTML = "K "+K.toFixed(2)+" &middot; exit in "+(T1*365).toFixed(1)+"d";
+}
+
+/* ================================================================ examples
+   Picking a name fills the five MARKET inputs and nothing else. Side,
+   contracts, days held and exit vol are the reader's own scenario, and
+   resetting those under them on every pick would make the selector feel like it
+   was undoing their work. */
+(function(){
+  const sel = $("example"), note = $("srcnote");
+  if(!sel) return;
+  const names = Object.keys(SNAPSHOT.names || {}).sort();
+  // The at-print ones are MARKED in the list. Every example is dated and
+  // labelled either way, but a reader choosing one should be able to see which
+  // carry a real event before clicking rather than after.
+  sel.innerHTML = '<option value="">Custom</option>'
+    + names.map(n => '<option value="'+n+'">'+n
+        + (SNAPSHOT.names[n].spans_earnings ? " · at print" : "")
+        + '</option>').join("");
+  if(!names.length){ sel.disabled = true; return; }
+
+  function say(html){ if(note) note.innerHTML = html; }
+  sel.addEventListener("change", () => {
+    const n = sel.value;
+    if(!n){ say(""); return; }                  // Custom leaves the fields alone
+    const e = SNAPSHOT.names[n];
+    $("spot").value = e.spot;
+    $("sf").value = e.front.straddle; $("df").value = e.front.dte;
+    $("sb").value = e.back.straddle;  $("db").value = e.back.dte;
+    /* EACH EXAMPLE CARRIES ITS OWN DATE, because each was captured on its own
+       day: a name is snapshotted on the last close before ITS print, so the
+       library fills over an earnings season rather than all at once.
+
+       AND IT SAYS WHICH KIND IT IS, which is the commonest way to misread this
+       tool. The decomposition hands ALL of the front expiry's excess variance
+       to "the event". With no print inside that expiry the excess is just the
+       shape of the curve, so a small event move there is term structure and not
+       a scheduled jump. Leaving the reader to work that out would be letting
+       the page overstate its own headline. */
+    const base = "<b>" + n + "</b> at-the-money straddles, " + e.front.expiry
+      + " and " + e.back.expiry + " at the " + e.front.strike + " strike"
+      + " &middot; an example, not a live quote.<br>";
+    say(e.spans_earnings
+      ? base + "Captured <b>" + e.as_of + "</b>, into the close before its <b>"
+             + e.report_date + "</b> print. Both expiries span the announcement,"
+             + " which is what lets the event premium be separated at all."
+      : base + "Captured <b>" + e.as_of + "</b>, an ordinary week. Its next print"
+             + " is " + (e.report_date || "not scheduled") + ", outside both expiries,"
+             + " so there is little or no event premium here to find:"
+             + " a small event move is the term structure, not a jump."
+             + " That is the correct reading, not a fault.");
+    go();
+  });
+})();
+
+for(const el of document.querySelectorAll("input, select")) el.addEventListener("input", go);
+go();
+</script>
+</body>
+</html>
