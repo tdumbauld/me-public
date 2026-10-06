@@ -28,7 +28,13 @@ TOOLS = {
     "vol-crush": "free",
 }
 
-app = FastAPI(title="Morning Execution tools")
+# The interactive docs are OFF. They are a convenience on a private box and a
+# published map of the access surface on this one: /docs would list every
+# /api/access/* route and the tier each tool wants. Nothing behind them is
+# unguarded - the gate is server side either way - but a public site should
+# not hand out its own schema.
+app = FastAPI(title="Morning Execution tools",
+              docs_url=None, redoc_url=None, openapi_url=None)
 app.mount("/static", StaticFiles(directory=os.path.join(HERE, "static")),
           name="static")
 
@@ -135,6 +141,20 @@ def refresh(request: Request):
 def vol_crush(sub=Depends(require("free"))):
     with open(os.path.join(HERE, "tools", "price-the-event.standalone.html"),
               encoding="utf-8") as f:
+        return HTMLResponse(f.read())
+
+
+# -------------------------------------------------------------------- site
+@app.get("/", response_class=HTMLResponse)
+def index():
+    """The sign-in box and the tool list.
+
+    NOT GATED, and it must not be: this is where `/api/access/verify` sends a
+    visitor whose tool slug it did not recognise, and where an unsubscribed
+    visitor has to be able to land in order to be told so. It names the tools
+    and reveals nothing about who holds what.
+    """
+    with open(os.path.join(HERE, "static", "index.html"), encoding="utf-8") as f:
         return HTMLResponse(f.read())
 
 

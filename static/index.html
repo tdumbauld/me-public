@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Morning Execution Tools</title>
+<style>
+  :root{
+    --bg:#0B0B0B; --panel:#121212; --line:#242424;
+    --ink:#E8E8E8; --mut:#8A8A8A; --grn:#22D36B; --red:#E5534B;
+    color-scheme: dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+       padding:env(safe-area-inset-top,0) 16px env(safe-area-inset-bottom,0)}
+  .wrap{max-width:560px;margin:0 auto;padding-block:56px}
+  h1{font-size:20px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 6px}
+  .tag{color:var(--mut);font-size:13px;margin:0 0 36px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px}
+  label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+        color:var(--mut);margin:0 0 8px}
+  input{width:100%;padding:11px 12px;background:#0E0E0E;border:1px solid var(--line);
+        border-radius:6px;color:var(--ink);font:14px/1.4 "JetBrains Mono",ui-monospace,monospace}
+  input:focus{outline:none;border-color:var(--grn)}
+  button{margin-top:14px;width:100%;padding:11px;border:0;border-radius:6px;
+         background:var(--grn);color:#06240F;font-weight:650;font-size:14px;cursor:pointer}
+  button[disabled]{opacity:.55;cursor:default}
+  .msg{margin-top:14px;font-size:13px;min-height:19px}
+  .msg.err{color:var(--red)} .msg.ok{color:var(--grn)}
+  .msg a{color:var(--grn)}
+  .tools{margin-top:30px;border-top:1px solid var(--line);padding-top:18px}
+  .tools h2{font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+            color:var(--mut);margin:0 0 12px;font-weight:600}
+  .tool{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+        padding:9px 0;border-bottom:1px solid var(--line)}
+  .tool:last-child{border-bottom:0}
+  .tool a{color:var(--ink);text-decoration:none;font-weight:600}
+  .tool a:hover{color:var(--grn)}
+  .lvl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+  .foot{margin-top:28px;color:var(--mut);font-size:12px}
+  .foot a{color:var(--mut)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Morning&nbsp;Execution</h1>
+  <p class="tag">Price the event, trade the vol.</p>
+
+  <div class="panel">
+    <label for="em">Email you subscribe with</label>
+    <input id="em" type="email" autocomplete="email" placeholder="you@example.com"
+           spellcheck="false">
+    <button id="go">Open the tools</button>
+    <div class="msg" id="msg" role="status" aria-live="polite"></div>
+  </div>
+
+  <div class="tools">
+    <h2>Available</h2>
+    <div class="tool">
+      <a href="/tools/vol-crush">Vol Crush Calculator</a>
+      <span class="lvl">Free</span>
+    </div>
+  </div>
+
+  <p class="foot">Not subscribed yet?
+    <a id="sub" href="https://www.morningexecution.com/">Join the newsletter</a>.</p>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const msg = (t, cls) => { const m = $("#msg"); m.textContent = t; m.className = "msg " + (cls || ""); };
+
+async function identify(){
+  const email = $("#em").value.trim();
+  if(!email){ msg("Enter the email you subscribe with.", "err"); return; }
+  $("#go").disabled = true; msg("Checking...");
+  try{
+    const r = await fetch("/api/access/identify", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({email: email, tool: "vol-crush"})
+    });
+    const d = await r.json().catch(() => ({}));
+    if(r.ok && d.sent){ msg(d.reason || "Check your inbox.", "ok"); return; }
+    if(r.ok){ location.href = "/tools/vol-crush"; return; }
+    // 403 carries a reason and, when it helps, somewhere to go.
+    const where = d.action === "upgrade" ? d.upgrade_url : d.subscribe_url;
+    msg(d.reason || "That address could not be verified.", "err");
+    if(where){
+      const a = document.createElement("a");
+      a.href = where; a.textContent = d.action === "upgrade" ? " Upgrade" : " Subscribe";
+      $("#msg").appendChild(a);
+    }
+  }catch(e){
+    msg("Could not reach the server. Try again shortly.", "err");
+  }finally{
+    $("#go").disabled = false;
+  }
+}
+$("#go").addEventListener("click", identify);
+$("#em").addEventListener("keydown", e => { if(e.key === "Enter") identify(); });
+
+// If a session already exists, skip the box.
+fetch("/api/access/me").then(r => r.json()).then(d => {
+  if(d && d.signed_in){
+    msg("Signed in as " + d.email + ".", "ok");
+    $("#go").textContent = "Open the Vol Crush Calculator";
+    $("#go").removeEventListener("click", identify);
+    $("#go").addEventListener("click", () => location.href = "/tools/vol-crush");
+  }
+}).catch(() => {});
+</script>
+</body>
+</html>

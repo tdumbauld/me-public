@@ -1,0 +1,40 @@
+[Unit]
+Description=Morning Execution public tools (me-public) FastAPI service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=deploy
+Group=deploy
+WorkingDirectory=/opt/me-public
+
+# Secrets live here, never in the repo. systemd reads it as root before dropping
+# to User=, which is why the file can be 600 root:deploy and the unit still sees
+# it. Same arrangement as /etc/me_app.env on this box.
+EnvironmentFile=/etc/me_public.env
+
+# PORT 8001, BECAUSE me-app ALREADY OWNS 8000. Both are bound to loopback on
+# purpose: nginx is the only thing that should reach either, and binding
+# 0.0.0.0 would publish the app on its port regardless of the cloud firewall.
+ExecStart=/opt/me-public/.venv/bin/uvicorn main:app --host 127.0.0.1 --port 8001
+
+Restart=always
+RestartSec=3
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+# NO ReadWritePaths. This service holds no database, writes no files, and keeps
+# its subscriber cache in memory by design (core/subscribers.py says why). If a
+# future change needs to write, add the one path here rather than relaxing
+# ProtectSystem.
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=me-public
+
+[Install]
+WantedBy=multi-user.target
