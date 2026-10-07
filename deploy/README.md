@@ -13,11 +13,35 @@ verify against the running server.
 Two steps need credentials or an account I cannot reach.
 
 1. **The DNS A record.** `tools.morningexecution.com` did not resolve as of
-   2026-10-06, and **certbot cannot issue a certificate until it does.** Add
-   an A record pointing at the droplet's IPv4 address. The apex and `www` sit
-   behind Cloudflare; this host must point **straight at the droplet** (grey
-   cloud, DNS only) or the ACME HTTP challenge is answered by Cloudflare and
-   fails.
+   2026-10-07, and **certbot cannot issue a certificate until it does.**
+
+   **The zone is at GoDaddy**, not Cloudflare: the authoritative nameservers
+   are `ns03.domaincontrol.com` / `ns04.domaincontrol.com`. An earlier draft of
+   this file said to set a Cloudflare grey cloud, which does not apply here and
+   would have sent you to the wrong control panel. What the apex and `www`
+   resolve to is a red herring - `www` is a CNAME to `cname.beehiiv.com`
+   because the newsletter site is hosted there, and it has nothing to do with
+   this host.
+
+   **Copy what `terminal` already does.** It is a plain A record straight to
+   the droplet with nothing in front of it, which is exactly what the ACME HTTP
+   challenge needs.
+
+   | field | value |
+   |---|---|
+   | Type | `A` |
+   | Name / Host | `tools` (just the label; GoDaddy appends the domain) |
+   | Value / Points to | `167.71.84.244` |
+   | TTL | 600 seconds while setting up, then leave it |
+
+   Steps: sign in to GoDaddy, **My Products** -> **Domains** ->
+   `morningexecution.com` -> **DNS** (or **Manage DNS**) -> **Add New Record**
+   -> fill the table above -> **Save**.
+
+   **Entering the full hostname in Name is the one easy mistake.** GoDaddy
+   appends the domain to whatever you type, so `tools.morningexecution.com`
+   becomes `tools.morningexecution.com.morningexecution.com` and resolves to
+   nothing, with no error to tell you so. The Name field is `tools`.
 2. **The three beehiiv values** in `/etc/me_public.env`. The signing secret is
    generated on the box by step 4, so only `BEEHIIV_API_KEY` and
    `BEEHIIV_PUBLICATION_ID` are typed by hand. Leave
@@ -78,6 +102,10 @@ sudo certbot --nginx -d tools.morningexecution.com
 Against the running server, not against git.
 
 ```bash
+# has the A record landed? Until this prints the droplet's address, certbot
+# will fail in a way that reads like a certbot problem and is not.
+dig +short A tools.morningexecution.com        # want 167.71.84.244
+
 # the app itself, behind nginx
 curl -s http://127.0.0.1:8001/api/health | python3 -m json.tool
 
